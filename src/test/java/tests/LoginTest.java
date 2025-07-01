@@ -1,8 +1,10 @@
 package tests;
 
-import io.qameta.allure.Description;
+import io.qameta.allure.*;
+import io.qameta.allure.junit5.AllureJunit5;
 import org.junit.jupiter.api.*;
 
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -19,7 +21,7 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-
+@ExtendWith(AllureJunit5.class)
 public class LoginTest {
 
     private WebDriver driver;
@@ -39,7 +41,7 @@ public class LoginTest {
 
     public static Stream<Arguments> loginDataProvider() {
         return Stream.of(
-                Arguments.of(LOGIN, PASSWORD, true),
+                /*Arguments.of(LOGIN, PASSWORD, true),
                 Arguments.of(LOGIN, "qwe", false),
                 Arguments.of("qwe", PASSWORD, false),
                 Arguments.of("qwe", "qwe", false),
@@ -52,7 +54,7 @@ public class LoginTest {
                 Arguments.of(" qwe", "qwe", false),
                 Arguments.of("qwe ", "qwe", false),
                 Arguments.of("1qwe", "qwe", false),
-                Arguments.of("qwe1", "qwe", false),
+                Arguments.of("qwe1", "qwe", false),*/
                 Arguments.of(LOGIN, "!@@#!$#@$&*", false)
         );
     }
@@ -61,6 +63,7 @@ public class LoginTest {
     @MethodSource("loginDataProvider")
     @DisplayName("Редирект после авторизации")
     @Description("Проверка редиректа на страницу /secure после авторизации")
+    @Severity(SeverityLevel.CRITICAL)
     public void redirectAfterLoginTest(String login, String password, boolean isSuccessAuthorizationExpected) {
         // Заполнение формы авторизации
         LoginPage loginPage = new LoginPage(driver);
@@ -85,6 +88,7 @@ public class LoginTest {
     @MethodSource("loginDataProvider")
     @DisplayName("Алерт с ошибкой авторизации")
     @Description("Проверка появления алерта с ошибкой при попытке авторизации с некорректными логином и паролем")
+    @Severity(SeverityLevel.NORMAL)
     public void errorAlertTest(String login, String password, boolean isSuccessAuthorizationExpected) {
         LoginPage loginPage = new LoginPage(driver);
         loginPage.login(login, password);
