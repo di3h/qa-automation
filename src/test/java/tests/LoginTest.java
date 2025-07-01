@@ -41,7 +41,7 @@ public class LoginTest {
 
     public static Stream<Arguments> loginDataProvider() {
         return Stream.of(
-                /*Arguments.of(LOGIN, PASSWORD, true),
+                Arguments.of(LOGIN, PASSWORD, true),
                 Arguments.of(LOGIN, "qwe", false),
                 Arguments.of("qwe", PASSWORD, false),
                 Arguments.of("qwe", "qwe", false),
@@ -54,7 +54,7 @@ public class LoginTest {
                 Arguments.of(" qwe", "qwe", false),
                 Arguments.of("qwe ", "qwe", false),
                 Arguments.of("1qwe", "qwe", false),
-                Arguments.of("qwe1", "qwe", false),*/
+                Arguments.of("qwe1", "qwe", false),
                 Arguments.of(LOGIN, "!@@#!$#@$&*", false)
         );
     }
