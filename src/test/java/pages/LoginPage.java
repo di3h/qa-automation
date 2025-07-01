@@ -21,7 +21,7 @@ public class LoginPage {
         this.driver = driver;
     }
 
-    @Step("Заполнение и отправка формы авторизации")
+    @Step("Заполнение и отправка формы авторизации с логином: {login} и паролем: {password}")
     public void login(String login, String password) {
         // Ожидание формы авторизации
         new WebDriverWait(driver, Duration.ofSeconds(30))
