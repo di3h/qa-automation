@@ -22,6 +22,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(AllureJunit5.class)
+@Epic("Аутентификация")
+@Feature("Форма логина")
 public class LoginTest {
 
     private WebDriver driver;
@@ -61,6 +63,7 @@ public class LoginTest {
 
     @ParameterizedTest
     @MethodSource("loginDataProvider")
+    @Story("Редирект на /secure после успешной авторизации")
     @DisplayName("Редирект после авторизации")
     @Description("Проверка редиректа на страницу /secure после авторизации")
     @Severity(SeverityLevel.CRITICAL)
@@ -86,6 +89,7 @@ public class LoginTest {
 
     @ParameterizedTest
     @MethodSource("loginDataProvider")
+    @Story("Ошибка при неверных данных авторизации")
     @DisplayName("Алерт с ошибкой авторизации")
     @Description("Проверка появления алерта с ошибкой при попытке авторизации с некорректными логином и паролем")
     @Severity(SeverityLevel.NORMAL)
