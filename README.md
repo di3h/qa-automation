@@ -39,7 +39,7 @@ Scenarios:
 
 1. Clone the project:
 ```bash
-git clone https://github.com/YOUR_USERNAME/REPO_NAME.git
+git clone https://github.com/di3h/qa-automation.git
 ```
 2. Open in IntelliJ IDEA or run from terminal:
 ```bash
