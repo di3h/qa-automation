@@ -1,55 +1,101 @@
 package tests;
 
-import jdk.jfr.Description;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import io.qameta.allure.Description;
+import org.junit.jupiter.api.*;
 
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.LoginPage;
 import utils.BrowserFactory;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.time.Duration;
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+
 public class LoginTest {
 
     private WebDriver driver;
     private final static String LOGIN = "tomsmith";
     private final static String PASSWORD = "SuperSecretPassword!";
-    private final static String WRONG_LOGIN = "111";
-    private final static String WRONG_PASSWORD = "111";
 
-    @BeforeAll
+    @BeforeEach
     public void setUp() {
         this.driver = BrowserFactory.getDriver("chrome");
         driver.get("https://the-internet.herokuapp.com/login");
     }
 
-    @AfterAll
+    @AfterEach
     public void tearDown() {
         driver.quit();
     }
 
-    @Test
-    @Description("Проверка редиректа на страницу /secure после успешной авторизации")
-    public void redirectAfterLoginTest() {
-        LoginPage loginPage = new LoginPage(driver);
-        loginPage.Login(LOGIN, PASSWORD);
-
-        assertTrue(driver.getCurrentUrl().contains("secure"), "После заполнения формы авторизации не произошел редирект на страницу /secure");
+    public static Stream<Arguments> loginDataProvider() {
+        return Stream.of(
+                Arguments.of(LOGIN, PASSWORD, true),
+                Arguments.of(LOGIN, "qwe", false),
+                Arguments.of("qwe", PASSWORD, false),
+                Arguments.of("qwe", "qwe", false),
+                Arguments.of("qwe", "", false),
+                Arguments.of("", "qwe", false),
+                Arguments.of("", "", false),
+                Arguments.of("0", "", false),
+                Arguments.of("", "0", false),
+                Arguments.of("0", "0", false),
+                Arguments.of(" qwe", "qwe", false),
+                Arguments.of("qwe ", "qwe", false),
+                Arguments.of("1qwe", "qwe", false),
+                Arguments.of("qwe1", "qwe", false),
+                Arguments.of(LOGIN, "!@@#!$#@$&*", false)
+        );
     }
 
-    @Test
-    @Description("Проверка появления алерта с ошибкой при попытке авторизации с некорректными логином и паролем")
-    public void errorAlertTest() {
+    @ParameterizedTest
+    @MethodSource("loginDataProvider")
+    @DisplayName("Редирект после авторизации")
+    @Description("Проверка редиректа на страницу /secure после авторизации")
+    public void redirectAfterLoginTest(String login, String password, boolean isSuccessAuthorizationExpected) {
+        // Заполнение формы авторизации
         LoginPage loginPage = new LoginPage(driver);
-        loginPage.Login(WRONG_LOGIN, WRONG_PASSWORD);
+        loginPage.login(login, password);
 
-        boolean isErrorAlertVisible = loginPage.isErrorAlertVisible(driver);
+        // Ожидание редиректа
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+            wait.until(ExpectedConditions.urlContains("secure"));
+        } catch (TimeoutException e) {
+            System.out.println("Редирект на страницу /secure не произошел");
+        }
 
-        assertTrue(isErrorAlertVisible, "После ввода некорректных логина и пароля не появился алерт с ошибкой");
+        if (isSuccessAuthorizationExpected) {
+            assertTrue(driver.getCurrentUrl().contains("secure"), "Для данных: " + login + "/" + password + " ожидался редирект на страницу /secure");
+        } else {
+            assertFalse(driver.getCurrentUrl().contains("secure"), "Для данных: " + login + "/" + password + " не ожидался редирект на страницу /secure");
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("loginDataProvider")
+    @DisplayName("Алерт с ошибкой авторизации")
+    @Description("Проверка появления алерта с ошибкой при попытке авторизации с некорректными логином и паролем")
+    public void errorAlertTest(String login, String password, boolean isSuccessAuthorizationExpected) {
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.login(login, password);
+
+        boolean isErrorAlertVisible = loginPage.isErrorAlertVisible();
+
+        if (isSuccessAuthorizationExpected) {
+            assertFalse(isErrorAlertVisible, "Для данных: " + login + "/" + password + " не ожидался алерт с ошибкой");
+        } else {
+            assertTrue(isErrorAlertVisible, "Для данных: " + login + "/" + password + " ожидался алерт с ошибкой");
+        }
     }
 
 }
