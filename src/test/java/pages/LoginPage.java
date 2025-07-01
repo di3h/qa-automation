@@ -1,5 +1,6 @@
 package pages;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
@@ -20,7 +21,8 @@ public class LoginPage {
         this.driver = driver;
     }
 
-    public void Login(String login, String password) {
+    @Step("Заполнение и отправка формы авторизации")
+    public void login(String login, String password) {
         // Ожидание формы авторизации
         new WebDriverWait(driver, Duration.ofSeconds(30))
                 .until(ExpectedConditions.elementToBeClickable(loginInput));
@@ -29,16 +31,10 @@ public class LoginPage {
         driver.findElement(loginInput).sendKeys(login);
         driver.findElement(passwordInput).sendKeys(password);
         driver.findElement(submitButton).click();
-
-        // Ожидание редиректа
-        try {
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-            wait.until(ExpectedConditions.urlContains("secure"));
-        } catch (TimeoutException e) {}
-
     }
 
-    public boolean isErrorAlertVisible(WebDriver driver) {
+    @Step("Ожидание и проверка отображения алерта с ошибкой")
+    public boolean isErrorAlertVisible() {
         try {
             new WebDriverWait(driver, Duration.ofSeconds(10))
                     .until(ExpectedConditions.visibilityOfElementLocated(errorAlert));
@@ -47,9 +43,7 @@ public class LoginPage {
 
             return isErrorAlertVisible;
         } catch (TimeoutException e) {
-            boolean isErrorAlertVisible = false;
-
-            return isErrorAlertVisible;
+            return false;
         }
 
     }
