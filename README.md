@@ -12,15 +12,19 @@ It is part of my QA portfolio and showcases my ability to create automated tests
 - Allure
 - Git
 
-## 🔧 Project Structure
+## 📁 Project Structure
 
+```
 src
-└─ test
-└─ java
-└─ tests # Test classes
-└─ pages # Page Object classes
-└─ utils # Optional: helpers and drivers
-
+├── main
+│   └── java
+│       └── #app code
+├── test
+│   └── java
+│       ├── tests         # UI test classes
+│       ├── pages         # Page Objects (optional)
+│       └── utils         # Driver setup, helpers (optional)
+```
 
 ## 🧪 Tested Website
 
@@ -29,17 +33,19 @@ src
 Scenarios:
 - Invalid login: incorrect username/password shows error
 - Valid login: redirects to secure page
-- Logout flow
-- (planned) Other forms and alerts
+- (planned) Logout flow. Other forms and alerts
 
 ## ▶️ How to Run
 
 1. Clone the project:
 ```bash
-git clone https://github.com/YOUR_USERNAME/REPO_NAME.git
-
+git clone https://github.com/di3h/qa-automation.git
+```
 2. Open in IntelliJ IDEA or run from terminal:
+```bash
 mvn clean test
-
+```
 3. (Optional) View test report in Allure:
+```bash
 allure serve target/allure-results
+```
