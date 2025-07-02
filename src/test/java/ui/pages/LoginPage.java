@@ -35,7 +35,12 @@ public class LoginPage {
 
     @Step("Ожидание и проверка отображения алерта с ошибкой")
     public boolean isErrorAlertVisible() {
-        return !driver.findElements(errorAlert).isEmpty();
+        try {
+            new WebDriverWait(driver, Duration.ofSeconds(5))
+                    .until(ExpectedConditions.visibilityOfElementLocated(errorAlert));
+            return true;
+        } catch (TimeoutException e) {
+            return false;
+        }
     }
-
 }
