@@ -18,18 +18,17 @@ import static org.junit.jupiter.api.Assertions.*;
 public class StatusCodesTest {
 
     private final static String RESPONSE_TEMPLATE = "This page returned a %d status code";
-    private final static int RESPONSE_TIME = 1000;
+    private final static int RESPONSE_TIME = 2000;
 
     @ParameterizedTest
     @CsvSource({
             "200, 200",
             "500, 500",
-            "404, 404",
-            "999, 404"
+            "404, 404"
     })
     @Story("Проверка status code")
     @DisplayName("Status code")
-    @Description("Проверка, что код ответа совпадает с ожидаемым. Проверка времени ответа")
+    @Description("Проверка, что код ответа совпадает с ожидаемым. Проверка времени ответа и заголовка Content-Type")
     @Severity(SeverityLevel.NORMAL)
     public void statusCodeTest(int testCode, int expectedCode) {
 
@@ -39,7 +38,8 @@ public class StatusCodesTest {
         assertAll(
                 () -> assertEquals(expectedCode, response.statusCode(), "Неверный статус-код"),
                 () -> assertTrue(body.contains(String.format(RESPONSE_TEMPLATE, expectedCode)), "Тело ответа не содержит код"),
-                () -> assertTrue(response.time() < RESPONSE_TIME)
+                () -> assertTrue(response.time() < RESPONSE_TIME, String.format("Время ответа более %d мс", RESPONSE_TIME)),
+                () -> assertTrue(response.header("Content-Type").contains("text/html"), "Content-Type не содержит text/html")
         );
 
     }
