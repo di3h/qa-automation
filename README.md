@@ -18,7 +18,7 @@ It is part of my QA portfolio and showcases my ability to create automated tests
 src
 ├── main
 │   └── java
-│       └── #app code
+│       └── (empty, reserved for future use)
 ├── test
 │   └── java
 │       ├── tests         # UI test classes
