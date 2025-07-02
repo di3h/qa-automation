@@ -1,7 +1,12 @@
-# Automation Tests with Java + Selenium
+# Automation Tests with Java: UI & API
 
-This repository contains a collection of demo tests written in Java using Selenium WebDriver.  
-It is part of my QA portfolio and showcases my ability to create automated tests for web applications.
+This repository contains a collection of demo tests written in Java.
+It is part of my QA portfolio and showcases my ability to create automated UI and API tests.
+
+## Test Areas
+
+- UI tests for web applications using Selenium WebDriver
+- API tests using RestAssured (example: testing status codes and response times)
 
 ## 📌 Technologies
 
@@ -11,6 +16,7 @@ It is part of my QA portfolio and showcases my ability to create automated tests
 - Maven
 - Allure
 - Git
+- RestAssured
 
 ## 📁 Project Structure
 
@@ -21,19 +27,30 @@ src
 │       └── (empty, reserved for future use)
 ├── test
 │   └── java
-│       ├── tests         # UI test classes
-│       ├── pages         # Page Objects (optional)
-│       └── utils         # Driver setup, helpers (optional)
+│       └── api
+            ├── clients       # API client classes
+│           ├── tests         # API test classes
+│       └── ui
+            ├── pages         # Page Objects
+│           ├── tests         # UI test classes
+│       └── utils         # Driver setup, helpers
 ```
 
 ## 🧪 Tested Website
 
 [https://the-internet.herokuapp.com/](https://the-internet.herokuapp.com/)
 
-Scenarios:
+### Scenarios:
+#### UI Tests (Selenium)
 - Invalid login: incorrect username/password shows error
 - Valid login: redirects to secure page
 - (planned) Logout flow. Other forms and alerts
+
+#### API Tests (RestAssured)
+- Status codes endpoint /status_codes/{code}:
+- - Checks returned HTTP status codes (e.g., 200, 404, 500)
+- - Verifies that the response body contains expected status text 
+- - Ensures response time is under 1 second
 
 ## ▶️ How to Run
 
