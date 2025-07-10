@@ -14,8 +14,8 @@ public class LoginPage {
     private WebDriver driver;
     private By loginInput = By.id("username");
     private By passwordInput = By.id("password");
-    private By submitButton = By.xpath(".//button[@type='submit']");
-    private By errorAlert = By.xpath(".//div[@class='flash error']");
+    private By submitButton = By.cssSelector("button[type='submit']");
+    private By errorAlert = By.cssSelector("div.flash.error");
 
     public LoginPage(WebDriver driver) {
         this.driver = driver;
